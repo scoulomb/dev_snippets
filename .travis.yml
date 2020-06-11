@@ -14,6 +14,5 @@ before_install:
 
 script:
   - docker-compose up -d --build
-  - sleep 5
-  - docker-compose logs serialization
+  # - docker-compose logs serialization
   - docker-compose stop

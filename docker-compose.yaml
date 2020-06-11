@@ -1,6 +1,6 @@
 version: "3.6"
 services:
-  server:
+  serialization:
     build:
       dockerfile: Dockerfile
       context: ./serialization
