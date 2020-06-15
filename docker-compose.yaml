@@ -5,4 +5,8 @@ services:
       dockerfile: Dockerfile
       context: ./serialization
     image: serialization
-
+  decorator:
+    build:
+      dockerfile: Dockerfile
+      context: ./decorators
+    image: decorators
