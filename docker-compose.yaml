@@ -10,3 +10,8 @@ services:
       dockerfile: Dockerfile
       context: ./decorators
     image: decorators
+  multithread:
+    build:
+      dockerfile: Dockerfile
+      context: ./multithread
+    image: multithread
