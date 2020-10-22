@@ -20,4 +20,5 @@ COPY *.py /working_dir/misc/
 # Run unit-tests and check coverage
 # For this to work COPY tests and ensure to have `__init__.py` in serialization and test
 RUN pipenv run python /working_dir/misc/list_not_none.py
+RUN pipenv run python /working_dir/misc/another_script.py
 
