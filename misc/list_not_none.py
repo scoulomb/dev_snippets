@@ -3,6 +3,7 @@ from typing import Any, List, Optional
 
 # Some ideas here:
 # - https://stackoverflow.com/questions/8826521/python-avoiding-if-condition-for-this-code
+# walrus operator used as func
 # - https://stackoverflow.com/questions/3845423/remove-empty-strings-from-a-list-of-strings
 # 281 lb
 

@@ -8,6 +8,11 @@ from mywikipedia import wikipedia
 # if call rename parallel_map to multithread we have a conflict issue and import error!
 from parallel_map.parallel_map import parallel_map
 
+def get_summary_safe(article_name: str) -> str:
+    try:
+        return wikipedia.summary(article_name)
+    except:
+        return f"Page id {article_name} does not match any pages"
 
 @dataclass
 class ArticleSummary:
@@ -30,7 +35,7 @@ def get_all_summaries_for_a_search_loop(search_query: str) -> List[ArticleSummar
     article_list: List[str] = wikipedia.search(search_query)
 
     def _fetch_article(article_name: str) -> ArticleSummary:
-        return ArticleSummary(article_name, wikipedia.summary(article_name),
+        return ArticleSummary(article_name, get_summary_safe(article_name),
                               datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
 
     pool_objects: List[ArticleSummary] = []
@@ -56,7 +61,7 @@ def get_all_summaries_for_a_search_map(search_query: str) -> List[ArticleSummary
     article_list: List[str] = wikipedia.search(search_query)
 
     def _fetch_article(article_name: str) -> ArticleSummary:
-        return ArticleSummary(article_name, wikipedia.summary(article_name),
+        return ArticleSummary(article_name, get_summary_safe(article_name),
                               datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
 
     pool_objects = list(map(_fetch_article, article_list))
@@ -69,7 +74,7 @@ def get_all_summaries_for_a_search_parallel_map(search_query: str) -> List[Artic
     article_list: List[str] = wikipedia.search(search_query)
 
     def _fetch_article(article_name: str) -> ArticleSummary:
-        return ArticleSummary(article_name, wikipedia.summary(article_name),
+        return ArticleSummary(article_name, get_summary_safe(article_name),
                               datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
 
     pool_objects = list(parallel_map(_fetch_article, article_list))
