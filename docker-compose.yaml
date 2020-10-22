@@ -15,3 +15,8 @@ services:
       dockerfile: Dockerfile
       context: ./multithread
     image: multithread
+  misc:
+    build:
+      dockerfile: Dockerfile
+      context: ./misc
+    image: misc
