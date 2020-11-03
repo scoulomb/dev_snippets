@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import json
 from abc import ABC
-from dataclasses import dataclass
-from typing import Dict, Any, TypeVar
+from dataclasses import dataclass, asdict
+from typing import Dict, Any, TypeVar, cast
 
 import jsonpickle
 import marshmallow_dataclass
@@ -77,9 +77,21 @@ class Model(ABC):
         # => this comment initial return, would make a json with none value in dict
         # and thus  make test fail and infoblox API call fail as none value are not ignored
 
+    def as_json_string_v2(self):
+        # in v1 we have
+        # return json.dumps(filter_null_and_empty_value(json.loads(json.dumps(self, default=lambda o: o.__dict__))))
+        # as it is a dataclass we can do
+        return json.dumps(filter_null_and_empty_value(asdict(self)))
+
+    # we deduce as as_dict function
+    def as_dict(self):
+        return filter_null_and_empty_value(asdict(self))
+
     @classmethod
     def from_dict(cls: SUB_MODEL, data: Dict[str, Any]) -> SUB_MODEL:
         model_schema = marshmallow_dataclass.class_schema(cls)
+        # can use unknown=marshmallow.EXCLUDE to to decode/deserialize a JSON where a field is not present in the Model.
+        # also nameserver pr#61
         return model_schema().load(data)
 
 
