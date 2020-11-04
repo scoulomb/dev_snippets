@@ -75,7 +75,7 @@ class TestModel(unittest.TestCase):
                 output = filter_null_and_empty_value(s)
                 return cast(Dict[str, Any], output)
 
-        # mimics what happens in try_run where we serialize an exception class containing an object
+        # mimics what happens in try_run of api_handlers where we serialize an exception class containing an object
         nested_list = [
             Nested("tutu"), Nested("titi"), Nested("toto")
         ]
