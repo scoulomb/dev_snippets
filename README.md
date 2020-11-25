@@ -14,6 +14,11 @@
 - `mulithread`:
     - Show advantage of using parallel map to parallelize http calls
 
+- `misc` 
+
+- `systemd`:
+    - Show usage of system 
+    
 # Run python tests
 
 They are in test folder.
