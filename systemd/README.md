@@ -1,5 +1,62 @@
 # Systemd basic
 
+## Intro
+
+See https://en.wikipedia.org/wiki/Systemd
+
+- You can list system units and timers
+
+````shell script
+systemctl list-units 
+systemctl list-timers
+````
+
+- You can list user units and timers
+
+
+````shell script
+systemctl --user list-units 
+systemctl --user list-timers
+````
+
+- You can filter on unit 
+
+````shell script
+systemctl list-units ‘*resolve*’
+systemctl --user list-units '*bluetooth*'
+````
+
+output would be 
+
+````shell script
+sylvain@sylvain-hp:~$ systemctl list-units '*resolve*'
+  UNIT                     LOAD   ACTIVE SUB     DESCRIPTION
+  systemd-resolved.service loaded active running Network Name Resolution
+
+LOAD   = Reflects whether the unit definition was properly loaded.
+ACTIVE = The high-level unit activation state, i.e. generalization of SUB.
+SUB    = The low-level unit activation state, values depend on unit type.
+
+1 loaded units listed. Pass --all to see loaded but inactive units, too.
+To show all installed unit files use 'systemctl list-unit-files'.
+
+sylvain@sylvain-hp:~$ systemctl --user list-units '*bluetooth*'
+  UNIT                                                                                        LOAD   ACTIVE SUB     DESCRIPTION                                                               >
+  sys-devices-pci0000:00-0000:00:1a.0-usb1-1\x2d1-1\x2d1.3-1\x2d1.3:1.0-bluetooth-hci0.device loaded active plugged /sys/devices/pci0000:00/0000:00:1a.0/usb1/1-1/1-1.3/1-1.3:1.0/bluetooth/hc>
+  sys-subsystem-bluetooth-devices-hci0.device                                                 loaded active plugged /sys/subsystem/bluetooth/devices/hci0                                     >
+  bluetooth.target                                                                            loaded active active  Bluetooth                                                                 >
+
+LOAD   = Reflects whether the unit definition was properly loaded.
+ACTIVE = The high-level unit activation state, i.e. generalization of SUB.
+SUB    = The low-level unit activation state, values depend on unit type.
+
+3 loaded units listed. Pass --all to see loaded but inactive units, too.
+To show all installed unit files use 'systemctl list-unit-files'.
+````
+
+
+## Purpose
+
 In this document we will show how to create our own `systemd service`.
 Like `systemctl start named` used for the [DNS](https://github.com/scoulomb/myDNS/blob/master/2-advanced-bind/5-real-own-dns-application/6-docker-bind-dns-use-linux-nameserver-rather-route53/start.sh).
  
@@ -476,7 +533,7 @@ Here `systemctl stop scoulomb` or `systemctl stop scoulomb.timer` does not requi
 
 <!-- We had to do it with Docker even if `ping` overrides uses exec from 
 https://github.com/scoulomb/myDNS/blob/master/2-advanced-bind/5-real-own-dns-application/6-use-linux-nameserver-part-d.md#also-when-we-override-it-is-like-we-use-the-exec-form
-and I would expect it to pass the signal but it seems kill mode used does not kill the docker OK --> 
+and I would expect it to pass the signal but it seems kill mode used does not kill the docker OK CF--> 
  
 
 ## we could use timer
@@ -600,8 +657,25 @@ WantedBy=default.target' > /etc/systemd/system/scoulomb.timer
 Note we can use system enable to launch a service or timer at system start
 And disable (it will remove the symlink)
 
-we use this for vm with Jupyter
-we could start minikube at machine start up with systemd.
+we use this for DEV vm with [Jupyter](https://github.com/scoulomb/myk8s/blob/master/Setup/ArchDevVM/archlinux-dev-vm-with-minikube.md#deploy-guest-archlinux-vm-with-vagrant).
+
+````shell script
+➤ systemctl list-units '*jupyter*'
+  UNIT LOAD ACTIVE SUB DESCRIPTION
+0 loaded units listed. Pass --all to see loaded but inactive units, too.
+➤ systemctl list-units --user '*jupyter*'
+  UNIT            LOAD   ACTIVE SUB     DESCRIPTION
+  jupyter.service loaded active running Start Jupyter Notebook when loging in. Available at http://localhost:9999
+
+LOAD   = Reflects whether the unit definition was properly loaded.
+ACTIVE = The high-level unit activation state, i.e. generalization of SUB.
+SUB    = The low-level unit activation state, values depend on unit type.
+
+1 loaded units listed. Pass --all to see loaded but inactive units, too.
+To show all installed unit files use 'systemctl list-unit-files'.
+````
+
+we could start Minikube at machine start up with systemd.
 
 ### systemd-resolve
 
@@ -614,6 +688,18 @@ Behind it is a `systemd` wrapper: https://wiki.archlinux.org/index.php/Systemd-r
 Here is a proof
 
 ````shell script
+[09:49] ~
+➤ systemctl list-units '*resolve*'
+  UNIT                     LOAD   ACTIVE SUB     DESCRIPTION
+  systemd-resolved.service loaded active running Network Name Resolution
+
+LOAD   = Reflects whether the unit definition was properly loaded.
+ACTIVE = The high-level unit activation state, i.e. generalization of SUB.
+SUB    = The low-level unit activation state, values depend on unit type.
+
+1 loaded units listed. Pass --all to see loaded but inactive units, too.
+To show all installed unit files use 'systemctl list-unit-files'.
+
 ➤ systemctl list-units | grep resolve
   systemd-resolved.service                                                                 loaded active running
    Network Name Resolution
