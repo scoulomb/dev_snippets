@@ -18,7 +18,10 @@
 
 - `systemd`:
     - Show usage of system 
-    
+
+- `pipeline`
+    - Show usage of pipeline
+        
 # Run python tests
 
 They are in test folder.

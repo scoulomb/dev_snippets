@@ -20,3 +20,8 @@ services:
       dockerfile: Dockerfile
       context: ./misc
     image: misc
+  pipline:
+    build:
+      dockerfile: Dockerfile
+      context: ./pipeline
+    image: pipeline
